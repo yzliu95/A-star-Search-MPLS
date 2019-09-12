@@ -6,6 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
+import random
 import utils as ut
 import math
 import user
@@ -125,7 +126,7 @@ def Astar(start,goal,map):
             nodes_expanded = nodes_expanded + 1
             path.append((next[X],next[Y]))
             print("A* search expanded ", nodes_expanded, " nodes")
-            return (path,next[G])
+            return (path,next[G],nodes_expanded)
         # open next node
         nodes_expanded = nodes_expanded + 1
         try:
@@ -176,7 +177,7 @@ def Uniform_cost(start,goal,map):
             nodes_expanded = nodes_expanded + 1
             path.append((next[X],next[Y]))
             print("Uniform cost search expanded ", nodes_expanded, " nodes")
-            return (path,next[G])
+            return (path,next[G],nodes_expanded)
         # open next node
         nodes_expanded = nodes_expanded + 1
         try:
@@ -206,16 +207,53 @@ def draw_map(map,path):
         e = path[i+1]
         x = [s[X],e[X]]
         y = [s[Y],e[Y]]
-        plt.plot(x,y,'r')
+        plt.plot(x,y,'k')
     plt.show()
 
 mapdata = importmap("map.txt")
 map = formatmap(mapdata)
 mapdata = None
+#
+# min_p, max_p, avg_p,n = 100,0,0,0
+# ps=[]
+# i = 0
+# while(i < 10):
+#     sum_p = 0
+#     try:
+#         print(n)
+#         s_x = random.randint(0, 4000)
+#         s_y = random.randint(4500,10000)
+#         g_x = random.randint(0, 4000)
+#         g_y = random.randint(4500,10000)
+#         print((s_x,s_y),(g_x,g_y))
+#         s = find_start_coor((s_x,s_y),map)
+#         g = find_goal_coor((g_x,g_y),map)
+#         (p1,l1,n1) = Astar(s,g,map)
+#         (p2,l2,n2) = Uniform_cost(s,g,map)
+#         p = n2 / n1 * 100
+#         if min_p > p:
+#             min_p = p
+#         if max_p < p:
+#             max_p = p
+#         i = i + 1
+#         sum_p = sum_p + p
+#         ps.append(p)
+#     except:
+#         continue
+# avg_p = sum_p/i
+# se = 0
+# for i in range(n):
+#     se = se + (p-avg_p)**2
+# se = math.sqrt(se/(n-1))
+#
+#
+# print("Total number of tests: 1000")
+# print("Min:", min_p, "Max: ", max_p, "Avg: ", avg_p, "SE: ", se)
+
 start = find_start_coor(user.START, map)
 goal = find_goal_coor(user.GOAL, map)
-(p1,l1) = Astar(start,goal,map)
-(p2,l2) = Uniform_cost(start,goal,map)
+(p1,l1,n1) = Astar(start,goal,map)
+(p2,l2,n2) = Uniform_cost(start,goal,map)
 print("Distance by A*: ",l1)
 print("Distance by ucs: ",l2)
 print("Both searches found the same path") if (p1 == p2) else ("Found different path")
